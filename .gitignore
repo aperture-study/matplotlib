@@ -112,6 +112,6 @@ lib/matplotlib/backends/web_backend/package-lock.json
 LICENSE/LICENSE_QHULL
 
 # Pilot-study local artifacts (not part of matplotlib)
+# NOTE: perf/ (session logs) and .opencode/ (Lens records) are intentionally
+# tracked as study data — only the local venv is ignored.
 .venv/
-.opencode/
-/perf/
