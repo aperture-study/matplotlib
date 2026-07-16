@@ -21,6 +21,16 @@ repo. Each tile is a file or directory; its **hue** comes from the active **Lens
 **Built-in Lenses** (always available):
 `Architectural layer` (default) · `Changed since last commit` · `Edit recency` · `Bus factor`
 
+**Drill-down Lenses (hierarchy).** A Lens can be *scoped to* one or more facets of
+another Lens — ask for one with `/lens` while a Lens is active (e.g. "drill into the
+UI facet").
+
+**Painter context: `minimal` vs `medium`.** Each Lens picks how much per-file context
+the painting agent sees. `minimal` (the default) sends the path, imports, and leading
+comment — enough to place a file by what it *is*. `medium` adds a cheap structural
+skeleton (exported names, file line count, and each top-level declaration's signature
++ length)
+
 ---
 
 ## Navigating the map
