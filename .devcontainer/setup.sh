@@ -15,20 +15,32 @@ cd "$(dirname "$0")/.."
 problems=0
 warn() { echo "SETUP PROBLEM: $*" >&2; problems=$((problems + 1)); }
 
-# setuptools_scm derives the version from the nearest reachable git tag. Codespace clones do
-# not fetch tags, and if the clone is also shallow there is no history for a tag to be
-# reachable *through* — fetching tag refs alone would not help. Handle both.
-if [ "$(git rev-parse --is-shallow-repository 2>/dev/null)" = "true" ]; then
-  echo "shallow clone detected — unshallowing so setuptools_scm can resolve a version"
-  git fetch --unshallow --tags origin || warn "could not unshallow the clone"
-else
-  git fetch --tags origin || warn "could not fetch git tags"
-fi
+# --- version resolution ------------------------------------------------------
+#
+# setuptools_scm derives the version from the nearest *reachable* git tag. Codespace clones
+# are shallow: all 150 tags are present but no history connects HEAD to any of them, so
+# `git describe` fails and setuptools_scm falls back to 0.1.0.dev1 rather than 3.8.0.dev*.
+# Fetching tags does not help — the tags were never missing, the history was.
+#
+# We do not --unshallow: that pulls matplotlib's full history, ~486 MiB, on every single
+# codespace create, for a version string. Instead we pin the version setuptools_scm *would*
+# have computed at study-base (26224d9606 = v3.7.1 + 1194 commits, under the
+# release-branch-semver and node-and-date schemes matplotlib configures in setup.py:342).
+#
+# This sticks at runtime for free: matplotlib's own _get_version()
+# (lib/matplotlib/__init__.py:213) skips setuptools_scm when .git/shallow exists and reads
+# the build-time _version.py, so the pinned value is what participants see all session.
+#
+# Preferred path is still real resolution — the pin is only used when tags are unreachable,
+# so a full clone elsewhere behaves normally.
+STUDY_BASE_VERSION="3.8.0.dev1194+g26224d96"
 
+git fetch --tags --quiet origin 2>/dev/null || true
 if described=$(git describe --tags --abbrev=8 2>/dev/null); then
-  echo "nearest tag: ${described}"
+  echo "tags reachable (${described}) — letting setuptools_scm resolve the version"
 else
-  warn "no reachable git tags — setuptools_scm will fall back to 0.1.0.dev1 instead of 3.8.0.dev*"
+  echo "shallow clone, no reachable tags — pinning version to ${STUDY_BASE_VERSION}"
+  export SETUPTOOLS_SCM_PRETEND_VERSION_FOR_MATPLOTLIB="$STUDY_BASE_VERSION"
 fi
 
 PY=python3.11
