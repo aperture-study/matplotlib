@@ -41,11 +41,14 @@ try:
     c = json.load(open(".opencode/opencode.json"))
 except Exception:
     sys.exit(1)
+# explore needs its own pin: a subagent with no model inherits the parent's (task.ts:176),
+# which is the main model, not small_model.
 sys.exit(0 if c.get("model") == "anthropic/claude-sonnet-5"
-         and c.get("small_model") == "anthropic/claude-haiku-4-5" else 1)
+         and c.get("small_model") == "anthropic/claude-haiku-4-5"
+         and c.get("agent", {}).get("explore", {}).get("model") == "anthropic/claude-haiku-4-5" else 1)
 PY
 then
-  ok "model + small_model pinned in .opencode/opencode.json"
+  ok "model, small_model and explore all pinned in .opencode/opencode.json"
 else
   bad "model pins missing or changed in .opencode/opencode.json"
 fi

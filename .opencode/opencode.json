@@ -2,5 +2,11 @@
   "$schema": "https://opencode.ai/config.json",
 
   "model": "anthropic/claude-sonnet-5",
-  "small_model": "anthropic/claude-haiku-4-5"
+  "small_model": "anthropic/claude-haiku-4-5",
+
+  "agent": {
+    "explore": {
+      "model": "anthropic/claude-haiku-4-5"
+    }
+  }
 }
