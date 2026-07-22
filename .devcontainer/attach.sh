@@ -9,15 +9,20 @@ set -uo pipefail
 
 VSIX=/opt/aperture/aperture.vsix
 EXT_DIR="$HOME/.vscode-remote/extensions/sst-dev.aperture-0.0.1"
+# Breadcrumb so verify.sh can report which path actually ran. Checking `command -v code` from a
+# terminal answers a different question — the hook's environment is not the terminal's.
+TRACE="$HOME/.aperture-attach-path"
 
 if [ ! -f "$VSIX" ]; then
   echo "Aperture VSIX missing at $VSIX — wrong image tag?" >&2
+  echo "missing-vsix" > "$TRACE"
   exit 0
 fi
 
 if command -v code >/dev/null 2>&1; then
   if code --install-extension "$VSIX" --force; then
     echo "Aperture extension installed. Reload the window to activate it."
+    echo "code-cli" > "$TRACE"
     exit 0
   fi
   echo "code --install-extension failed; falling back to unpacking the VSIX" >&2
@@ -40,4 +45,5 @@ with zipfile.ZipFile(vsix) as z:
 print(f"unpacked {vsix} -> {dest}")
 PY
 
+echo "vsix-unpack" > "$TRACE"
 echo "Aperture extension staged. Reload the window to activate it."

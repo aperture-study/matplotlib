@@ -18,10 +18,18 @@ echo "== secret =="
 # Must arrive from the org Codespaces secret. If this fails, Aperture starts and then cannot
 # reach a model, which looks like a broken image rather than a missing secret.
 check "ANTHROPIC_API_KEY is set" '[ -n "${ANTHROPIC_API_KEY:-}" ]'
-if grep -rq 'localEnv' .devcontainer/ 2>/dev/null; then
-  bad "\${localEnv:...} found in .devcontainer — it resolves empty here and shadows the secret"
+# Check the parsed config, not the raw directory: devcontainer.json's comments discuss
+# ${localEnv:...} by name, and this script contains the pattern too. Both are false positives.
+if python3 - <<'PY'
+import json, re, sys
+raw = open(".devcontainer/devcontainer.json").read()
+raw = re.sub(r'^\s*//.*$', '', raw, flags=re.M)
+sys.exit(1 if "${localEnv:" in json.dumps(json.loads(raw)) else 0)
+PY
+then
+  ok "no \${localEnv:...} in the parsed devcontainer config"
 else
-  ok "no \${localEnv:...} anywhere in .devcontainer"
+  bad "\${localEnv:...} in the devcontainer config — resolves empty here and shadows the secret"
 fi
 
 echo "== image =="
@@ -59,14 +67,15 @@ else
   check "store.db seeded" '[ -s store.db ]'
 fi
 
-echo "== extension install path (record which one fired) =="
-if command -v code >/dev/null 2>&1; then
-  echo "  NOTE  'code' IS on PATH here — attach.sh used the CLI"
-else
-  echo "  NOTE  'code' is NOT on PATH — attach.sh used the VSIX-unpack fallback"
-fi
-check "extension present in the server's extension dir" \
-      'ls -d "$HOME"/.vscode-remote/extensions/sst-dev.aperture-* || code --list-extensions | grep -qi aperture'
+echo "== extension install =="
+case "$(cat "$HOME/.aperture-attach-path" 2>/dev/null)" in
+  code-cli)     echo "  NOTE  attach.sh used the 'code' CLI" ;;
+  vsix-unpack)  echo "  NOTE  attach.sh used the VSIX-unpack fallback ('code' absent or failed)" ;;
+  missing-vsix) bad  "attach.sh found no VSIX — wrong image tag?" ;;
+  *)            echo "  NOTE  no breadcrumb — attach.sh predates it, or has not run since" ;;
+esac
+check "extension is installed" \
+      'ls -d "$HOME"/.vscode-remote/extensions/sst-dev.aperture-* 2>/dev/null || code --list-extensions 2>/dev/null | grep -qi aperture'
 
 echo
 echo "$pass passed, $fail failed"
