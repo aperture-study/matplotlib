@@ -1,0 +1,48 @@
+{
+  "sessionID": "ses_075156ac1ffeYmO6ZoLoDRu3F7",
+  "directory": "/home/jebthom/projects/examplerepos/matplotlib",
+  "version": "local",
+  "agent": "build",
+  "startedAt": "2026-07-22T17:40:57.278Z",
+  "git": {
+    "branch": "study1",
+    "commit": "567d714f3b"
+  },
+  "summary": {
+    "prompts": {
+      "lens": 5
+    },
+    "apertureToolCalls": {
+      "byUser": 1,
+      "byAgent": 4
+    },
+    "toolCalls": {
+      "lens_list": 2,
+      "bash": 3,
+      "lens_create": 2
+    },
+    "tokens": {
+      "input": 20,
+      "output": 5174,
+      "reasoning": 0,
+      "cache": {
+        "read": 153850,
+        "write": 22833
+      }
+    },
+    "painterTokens": {
+      "input": 182656,
+      "output": 51714
+    },
+    "cost": 0.13963250000000002,
+    "clicks": {
+      "lens.select": 1
+    },
+    "models": [
+      "anthropic/claude-sonnet-5"
+    ],
+    "startedMs": 1784742057278,
+    "lastMs": 1784742304236,
+    "wallclockMs": 246958
+  }
+}

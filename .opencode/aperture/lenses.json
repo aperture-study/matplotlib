@@ -1,0 +1,112 @@
+{
+  "repo-neighborhoods-65c45686": {
+    "id": "repo-neighborhoods-65c45686",
+    "name": "Repo neighborhoods",
+    "description": "A map of the repo's major neighborhoods — API, backends, native code, tests, docs, and build tooling.",
+    "palette": "earthy",
+    "prompt": "Classify each file into the repo neighborhood it belongs to: Python API for public plotting/toolkit modules users import; Backends for per-target rendering backend implementations and their GUI shells; Native ext for C/C++/ObjC extension source and vendored native libs; Tests for test modules, fixtures, and baseline images; Docs & demos for prose docs, API reference, and gallery examples; Build & CI for packaging, dependency pins, CI config, and dev tooling.",
+    "facets": [
+      {
+        "id": "python-api",
+        "label": "Python API",
+        "description": "Public plotting modules and toolkits users import directly (e.g. pyplot, axes, figure, artist, collections, mpl_toolkits) — the core Python-level user-facing API.",
+        "color": "#8C7A5B"
+      },
+      {
+        "id": "backends",
+        "label": "Backends",
+        "description": "Per-output-target rendering backends and their GUI shells (e.g. backend_agg.py, backend_gtk*, backend_qt*, backend_pdf, backend_svg, backend_macosx.py).",
+        "color": "#A65E2E"
+      },
+      {
+        "id": "native-ext",
+        "label": "Native ext",
+        "description": "C/C++/Objective-C extension sources and vendored native libraries (src/, extern/, and the stub companions for compiled extension modules).",
+        "color": "#6B8E5A"
+      },
+      {
+        "id": "tests",
+        "label": "Tests",
+        "description": "Test modules, fixtures, baseline images, and testing utilities (lib/matplotlib/tests/, lib/matplotlib/testing/, result_images/).",
+        "color": "#C2A878"
+      },
+      {
+        "id": "docs-demos",
+        "label": "Docs & demos",
+        "description": "Prose documentation, API reference, and gallery example scripts (doc/, galleries/).",
+        "color": "#5F5F87"
+      },
+      {
+        "id": "build-ci",
+        "label": "Build & CI",
+        "description": "Packaging, dependency pins, CI configuration, and dev tooling (setup.py, setupext.py, pyproject.toml, requirements/, ci/, tools/, azure-pipelines.yml, tox.ini, environment.yml).",
+        "color": "#9C6B4F"
+      }
+    ],
+    "scope": "project",
+    "directories": [
+      "lib/matplotlib",
+      "src",
+      "extern",
+      "doc",
+      "galleries",
+      "ci",
+      "requirements",
+      "tools"
+    ]
+  },
+  "rendering-pipeline-1965d97a": {
+    "id": "rendering-pipeline-1965d97a",
+    "name": "Rendering pipeline",
+    "description": "Traces how a plotting call becomes rendered output — from artist objects through layout, the renderer abstraction, backends, native rasterization, and config.",
+    "palette": "bright",
+    "prompt": "Classify each file by its role in turning a plotting call into rendered output: Artists for drawable objects that render themselves (text, lines, patches, collections, images); Layout for coordinate transforms, axes/axis geometry, figure composition, and layout engines; Renderer API for the abstract renderer/graphics-context interfaces every backend implements; Backends for concrete backend implementations (raster, vector, GUI, web); Rasterizer for native rasterization and font-rendering code beneath the Python backends; Config for rcParam definitions, style sheets, and packaged defaults.",
+    "facets": [
+      {
+        "id": "artists",
+        "label": "Artists",
+        "description": "Drawable objects that render themselves: text, lines, patches, collections, images, and the base Artist machinery (artist.py, lines.py, patches.py, collections.py, text.py, image.py, textpath.py).",
+        "color": "#4E79A7"
+      },
+      {
+        "id": "layout",
+        "label": "Layout",
+        "description": "Coordinate transforms, axes and axis geometry, figure composition, and layout engines (transforms.py, axes/, axis.py, figure.py, gridspec.py, layout_engine.py, _tight_layout.py, _constrained_layout.py).",
+        "color": "#F28E2B"
+      },
+      {
+        "id": "renderer-api",
+        "label": "Renderer API",
+        "description": "The abstract renderer and graphics-context interfaces every backend implements (backend_bases.py, backend_managers.py).",
+        "color": "#59A14F"
+      },
+      {
+        "id": "backends",
+        "label": "Backends",
+        "description": "Concrete backend implementations for raster, vector, GUI, and web targets (backends/backend_agg.py, backend_svg.py, backend_pdf.py, backend_gtk*, backend_qt*, backend_wx*, backend_webagg*, etc.).",
+        "color": "#E15759"
+      },
+      {
+        "id": "rasterizer",
+        "label": "Rasterizer",
+        "description": "Native rasterization and font rendering beneath the Python backends (src/_backend_agg*, src/ft2font*, src/_image_resample.h, src/_tkagg.cpp, extern/agg24-svn).",
+        "color": "#B07AA1"
+      },
+      {
+        "id": "config",
+        "label": "Config",
+        "description": "rcParam definitions, style sheets, and packaged defaults (_fontconfig_pattern.py, style/core.py, mpl-data/stylelib, mpl-data/matplotlibrc, mpl-data/fonts).",
+        "color": "#EDC948"
+      }
+    ],
+    "scope": "project",
+    "directories": [
+      "lib/matplotlib",
+      "lib/matplotlib/backends",
+      "lib/matplotlib/axes",
+      "lib/matplotlib/style",
+      "src",
+      "extern"
+    ]
+  }
+}
