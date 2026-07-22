@@ -32,7 +32,14 @@
     "vscode": {
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
-        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+
+        // .opencode/opencode.json carries a $schema pointing at opencode.ai, which the
+        // editor cannot fetch here and reports as a hint in the Problems tab. Removing the
+        // $schema is not an option — opencode writes it back on startup (config.ts:223) and
+        // would leave the participant's tree dirty. Turning the fetch off is the quiet fix,
+        // and a study codespace has no use for remote schema validation anyway.
+        "json.schemaDownload.enable": false
       }
     }
   }
