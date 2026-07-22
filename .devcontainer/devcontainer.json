@@ -1,0 +1,39 @@
+{
+  "name": "aperture-study-matplotlib",
+
+  // The frozen Aperture prototype. Pinned by tag so the study stays reproducible after
+  // Aperture's source moves on; the tag resolves to a SHA recorded in the study record.
+  "image": "ghcr.io/aperture-study/aperture-study:study1",
+
+  // The default codespace machine is 2-core and this tree compiles C++ extensions plus
+  // freetype and qhull from source. The org's machine policy allows standardLinux32gb
+  // (4 cores / 16 GB), which satisfies this.
+  "hostRequirements": { "cpus": 4, "memory": "8gb" },
+
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.11" }
+  },
+
+  // updateContentCommand, not postCreateCommand: only the former is captured by prebuilds,
+  // and the matplotlib build takes minutes even on 4 cores.
+  "updateContentCommand": "bash .devcontainer/setup.sh",
+  "postAttachCommand": "bash .devcontainer/attach.sh",
+
+  "forwardPorts": [4096],
+  "portsAttributes": {
+    "4096": { "label": "aperture", "onAutoForward": "silent" }
+  },
+
+  // No "secrets" block, and no ${localEnv:...} anywhere. ANTHROPIC_API_KEY arrives from an
+  // org-level Codespaces secret automatically; declaring it here would instead prompt every
+  // participant for a *personal* secret they don't have, and ${localEnv:...} resolves to an
+  // empty string in Codespaces and would shadow the real value.
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
+      }
+    }
+  }
+}

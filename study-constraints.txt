@@ -1,0 +1,45 @@
+# matplotlib study-base — verified build + test pins.
+#
+# This tree is matplotlib 3.8.0.dev at 26224d9606 (2023-06-02): still the setup.py +
+# setupext.py build, pre-Meson, pre-C++17. Installing it with 2026-latest packages produces
+# either a broken import or a test suite that cannot collect, so every version here is
+# deliberate. Verified twice-green in an org codespace on Python 3.11.9.
+#
+# Used as: pip install --no-build-isolation -c study-constraints.txt -e .
+
+# --- build chain ---
+# numpy<2 is a hard rule: the extensions compile against numpy 1.x headers and numpy 2 is an
+# ABI break that only shows up at `import matplotlib.pyplot`, well after a "successful" build.
+# 1.26.4 is the last 1.x. setuptools<70 plus --no-build-isolation keeps pip from resolving
+# 2026 versions of the build chain behind our back.
+setuptools==65.5.0
+setuptools_scm==8.3.1
+wheel==0.43.0
+pybind11==2.13.6
+numpy==1.26.4
+
+# --- runtime (June-2023 era) ---
+# Era-pinned rather than frozen at 2026-latest. The modern set imports and renders fine, but
+# pyparsing 3.3.x breaks this matplotlib's *test collection*: mpl calls deprecated pyparsing
+# APIs and its test config turns warnings into errors, so pytest errors out before running a
+# single test. Participants run these tests, so that is not shippable.
+contourpy==1.0.7
+cycler==0.11.0
+fonttools==4.39.4
+kiwisolver==1.4.4
+pillow==9.5.0
+pyparsing==3.0.9
+python-dateutil==2.8.2
+six==1.16.0
+
+# --- test runner ---
+# Not part of the build, but participants are told to run the suite, so it is pinned with
+# everything else. Known pytest-xdist quirk at this vintage: passing multiple explicit file
+# paths at once collects 0 items — use a directory, a -k filter, or a single file.
+pytest==7.4.4
+pytest-xdist==3.5.0
+pytest-timeout==2.3.1
+
+# --- shared / transitive ---
+packaging==23.1
+certifi==2023.5.7

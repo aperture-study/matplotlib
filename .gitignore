@@ -110,3 +110,9 @@ lib/matplotlib/backends/web_backend/node_modules/
 lib/matplotlib/backends/web_backend/package-lock.json
 
 LICENSE/LICENSE_QHULL
+
+# Study-local artifacts (not part of matplotlib)
+# NOTE: perf/ (session logs) and .opencode/aperture/ (Lens records) are intentionally
+# tracked as study data — capture.sh collects them at the end of a session.
+.venv/
+.opencode/node_modules/
