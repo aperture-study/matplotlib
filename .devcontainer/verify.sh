@@ -32,6 +32,24 @@ else
   bad "\${localEnv:...} in the devcontainer config — resolves empty here and shadows the secret"
 fi
 
+echo "== model pins =="
+# Unpinned, defaultModel() falls through to the first provider's sort(models)[0], which in a
+# fresh codespace resolved to a non-Anthropic model. Both pins must be committed and read.
+if python3 - <<'PY'
+import json, sys
+try:
+    c = json.load(open(".opencode/opencode.json"))
+except Exception:
+    sys.exit(1)
+sys.exit(0 if c.get("model") == "anthropic/claude-sonnet-5"
+         and c.get("small_model") == "anthropic/claude-haiku-4-5" else 1)
+PY
+then
+  ok "model + small_model pinned in .opencode/opencode.json"
+else
+  bad "model pins missing or changed in .opencode/opencode.json"
+fi
+
 echo "== image =="
 check "bun is 1.3.14"                  '[ "$(bun --version)" = "1.3.14" ]'
 check "aperture wrapper is on PATH"    'command -v aperture'
